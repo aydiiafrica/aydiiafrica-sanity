@@ -1,5 +1,3 @@
-import {Rule} from '@sanity/types'
-
 export default {
   name: 'project',
   title: 'Project',
@@ -9,7 +7,7 @@ export default {
       name: 'title',
       title: 'Title',
       type: 'string',
-      validation: (rule: Rule) => rule.required(),
+      validation: (Rule: any) => Rule.required(),
     },
     {
       name: 'slug',
@@ -19,23 +17,7 @@ export default {
         source: 'title',
         maxLength: 96,
       },
-      validation: (rule: Rule) => rule.required(),
-    },
-    {
-      name: 'category',
-      title: 'SDG Category',
-      type: 'string',
-      options: {
-        list: [
-          {title: 'Climate Action', value: 'climate-action'},
-          {
-            title: 'Peace, Justice and Strong Institutions',
-            value: 'peace-justice-strong-institutions',
-          },
-          {title: 'Gender Equality', value: 'gender-equality'},
-        ],
-      },
-      validation: (rule: Rule) => rule.required(),
+      validation: (Rule: any) => Rule.required(),
     },
     {
       name: 'mainImage',
@@ -44,26 +26,123 @@ export default {
       options: {
         hotspot: true,
       },
+      validation: (Rule: any) => Rule.required(),
     },
     {
-      name: 'images',
-      title: 'Additional Images',
-      type: 'array',
-      of: [{type: 'image', options: {hotspot: true}}],
+      name: 'description',
+      title: 'Description',
+      type: 'text',
+      validation: (Rule: any) => Rule.required(),
     },
     {
-      name: 'body',
-      title: 'Body',
+      name: 'imageGallery',
+      title: 'Image Gallery',
       type: 'array',
       of: [
         {
-          type: 'block',
-        },
-        {
           type: 'image',
-          options: {hotspot: true},
+          name: 'imageMediaItem',
+          options: {
+            hotspot: true,
+          },
         },
       ],
+    },
+    {
+      name: 'videoGallery',
+      title: 'Video Gallery',
+      type: 'array',
+      of: [
+        {
+          name: 'videoMediaItem',
+          title: 'Video Media Item',
+          type: 'object',
+          fields: [
+            {
+              name: 'videoFile',
+              title: 'Video File',
+              type: 'file',
+              options: {
+                accept: 'video/*',
+              },
+            },
+            {
+              name: 'thumbnail',
+              title: 'Thumbnail Image',
+              type: 'image',
+              options: {
+                hotspot: true,
+              },
+            },
+          ],
+        },
+      ],
+      preview: {
+        select: {
+          title: 'videoFile.asset.originalFilename',
+          media: 'thumbnail',
+        },
+        prepare(selection: {title?: string; media?: any}) {
+          const {title, media} = selection
+          return {
+            title: title || 'Video File',
+            media: media || undefined,
+          }
+        },
+      },
+    },
+    {
+      name: 'documentGallery',
+      title: 'Documents Gallery',
+      type: 'array',
+      of: [
+        {
+          name: 'documentMediaItem',
+          title: 'Document Media Item',
+          type: 'object',
+          fields: [
+            {
+              name: 'documentName',
+              title: 'Document File Name',
+              type: 'string',
+            },
+            {
+              name: 'documentFile',
+              title: 'Document File',
+              type: 'file',
+              options: {
+                accept: '.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt',
+              },
+            },
+          ],
+        },
+      ],
+      preview: {
+        select: {
+          title: 'documentFile.asset.originalFilename',
+        },
+        prepare(selection: {title?: string}) {
+          return {
+            title: selection.title || 'Document File',
+          }
+        },
+      },
+    },
+    {
+      name: 'sdgs',
+      title: 'SDGs',
+      type: 'array',
+      of: [
+        {
+          type: 'reference',
+          to: [{type: 'sdg'}],
+        },
+      ],
+    },
+    {
+      name: 'content',
+      title: 'Content',
+      type: 'blockContent',
     },
   ],
 }

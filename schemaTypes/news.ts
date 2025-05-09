@@ -35,15 +35,15 @@ export default {
       validation: (Rule: any) => Rule.required(),
     },
     {
-      name: 'content',
-      title: 'Content',
-      type: 'blockContent',
-    },
-    {
       name: 'publishedAt',
       title: 'Published At',
       type: 'datetime',
       validation: (Rule: any) => Rule.required(),
+    },
+    {
+      name: 'content',
+      title: 'Content',
+      type: 'blockContent',
     },
   ],
 }
